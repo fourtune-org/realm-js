@@ -5,7 +5,7 @@ export default {
 	api_version: 1,
 	dependencies: {
 		"@fourtune/base-realm-js-and-web": {
-			version: "0.40000.0"
+			version: "0.40000.1"
 		},
 
 		"@aniojs/node-ts-utils": {
