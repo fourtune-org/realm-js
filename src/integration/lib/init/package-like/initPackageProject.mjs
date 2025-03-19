@@ -264,6 +264,12 @@ export async function initPackageProject(fourtune_session) {
 
 				entry_code_2 += `}\n`
 
+				for (const symbol of exported_symbols) {
+					if (symbol.is_type_only || exportNameIsType(symbol.name)) {
+						entry_code_2 += `export type {${symbol.name}}\n`
+					}
+				}
+
 				const index_dmts = await tsTypeDeclarationBundler(
 					fourtune_session.getProjectRoot(),
 					entry_code, {
