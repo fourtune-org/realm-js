@@ -48,6 +48,13 @@ function assetReporter(
 	}
 }
 
+//
+// crude way of fixing a bug related to rollup-plugin-dts
+//
+function exportNameIsType(export_name) {
+	return export_name.toUpperCase().slice(0, 1) === export_name.slice(0, 1)
+}
+
 export async function initPackageProject(fourtune_session) {
 	const {getObjectsPath} = fourtune_session.paths
 	const output_modules = new Map()
@@ -193,7 +200,7 @@ export async function initPackageProject(fourtune_session) {
 					// __star_export, __index or __default
 					if (source.endsWith(".d.mts")) {
 						entry_code += exportStatement(
-							getObjectsPath(source), export_name, true
+							getObjectsPath(source), export_name, exportNameIsType(export_name)
 						)
 
 						exported_symbols.push({
@@ -205,7 +212,7 @@ export async function initPackageProject(fourtune_session) {
 						const extensionless_source = source.slice(0, -4)
 						source_path = getObjectsPath(`${extensionless_source}.d.mts`)
 
-						entry_code += exportStatement(source_path, export_name, true)
+						entry_code += exportStatement(source_path, export_name, exportNameIsType(export_name))
 
 						// __star_export and __index
 						// both can have an arbitrary amount of named
