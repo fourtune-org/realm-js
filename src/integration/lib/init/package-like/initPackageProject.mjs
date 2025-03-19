@@ -241,9 +241,11 @@ export async function initPackageProject(fourtune_session) {
 
 				for (const symbol of exported_symbols) {
 					if (symbol.name !== "default") {
-						entry_code_2 += `import type {${symbol.name}} from "${symbol.type_source}"\n`
+						const typeSpecifier = symbol.is_type_only || exportNameIsType(symbol.name) ? "type " : ""
+
+						entry_code_2 += `import ${typeSpecifier}{${symbol.name}} from "${symbol.type_source}"\n`
 					} else {
-						entry_code_2 += `import type __default_import from "${symbol.type_source}"\n`
+						entry_code_2 += `import __default_import from "${symbol.type_source}"\n`
 					}
 				}
 
