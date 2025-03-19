@@ -251,14 +251,12 @@ export async function initPackageProject(fourtune_session) {
 				entry_code_2 += `export type ModuleExport = {\n`
 
 				for (const symbol of exported_symbols) {
-					if (symbol.is_type_only) {
-						entry_code_2 += `    ${symbol.name}: ${symbol.name},\n`
+					if (symbol.is_type_only || exportNameIsType(symbol.name)) continue
+
+					if (symbol.name === "default") {
+						entry_code_2 += `    ${symbol.name}: typeof __default_import,\n`
 					} else {
-						if (symbol.name === "default") {
-							entry_code_2 += `    ${symbol.name}: typeof __default_import,\n`
-						} else {
-							entry_code_2 += `    ${symbol.name}: typeof ${symbol.name},\n`
-						}
+						entry_code_2 += `    ${symbol.name}: typeof ${symbol.name},\n`
 					}
 				}
 
