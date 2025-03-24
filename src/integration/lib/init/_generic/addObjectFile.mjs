@@ -6,19 +6,23 @@ async function convertTypeScriptFile(fourtune_session, code, file_path) {
 		"@fourtune/base-realm-js-and-web"
 	)
 
+	const isAsset = file_path.startsWith("assets/") || file_path.startsWith("auto/assets/")
+
+	// only resolve import aliases for files that are not assets
+	if (!isAsset) {
+		// import aliases need to be resolved first because of a change
+		// in @babel/preset-typescript
+		code = await resolveImportAliases(
+			fourtune_session, code, file_path
+		)
+	}
+
 	code = await tsStripTypesFromCode(code, {
 		filename: file_path,
 		replace_import_extensions: true
 	})
 
-	// don't resolve aliases for files located inside assets/ or auto/assets/
-	if (file_path.startsWith("assets/") || file_path.startsWith("auto/assets/")) {
-		return code
-	}
-
-	return await resolveImportAliases(
-		fourtune_session, code, file_path
-	)
+	return code
 }
 
 export async function addObjectFile(fourtune_session, input_file) {
